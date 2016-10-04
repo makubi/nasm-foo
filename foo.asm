@@ -1,19 +1,31 @@
 section .data
 	true db "Numbers equal",10
-	false db "Numbers not equal",10
-	number1 db 10
-	number2 db 20
+	false db "Numbers not equal"
+	wrongArgc db "Did not pass two args",10
+
+section .bss
+	input1: resb 2
+	input2: resb 2
 
 section .text
 	global _start
 
 _start:
-	mov eax, number1
-	mov ecx, number2
-	cmp eax, ecx
+	pop rax
+	cmp rax, 3
+	jne _exit_error
+
+	pop rax
+	
+	pop rax
+	mov rcx, [rax]
+	pop rax
+	mov rbx, [rax]
+
+	cmp rcx, rbx
 	je equals
 	jne nequals
-
+	
 equals:
 	mov rax, 1
 	mov rdi, 1
@@ -24,18 +36,41 @@ equals:
 	push 0
 	jmp exit
 	
-;	mov rax, 60
-;	mov rdi, 0
-;	syscall
-
 nequals:
+	push rbx
+	push rcx
+	
 	mov rax, 1
 	mov rdi, 1
 	mov rsi, false
-	mov rdx, 18
+	mov rdx, 17
+	syscall
+	
+	pop rsi
+	add rsi, 48
+	mov rdx, 1
+	syscall
+	
+	pop rsi
+	add rsi, 48
+	mov rdx, 1
+	syscall
+	
+	mov rsi, 10
+	mov rdx, 1
 	syscall
 
 	push 1
+	jmp exit
+
+_exit_error:
+	mov rax, 1
+	mov rdi, 1
+	mov rsi, wrongArgc
+	mov rdx, 22
+	syscall
+	
+	push 2
 	jmp exit
 
 exit:
