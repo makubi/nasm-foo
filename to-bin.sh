@@ -6,5 +6,5 @@ filename=$(basename "$1")
 extension="${filename##*.}"
 filename="${filename%.*}"
 
-nasm -f elf64 -o $filename.o $1
-ld $filename.o -o $filename
+nasm -g -f elf64 -o bin/$filename.o $1
+ld bin/$filename.o -o bin/$filename
