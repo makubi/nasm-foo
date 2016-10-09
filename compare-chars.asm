@@ -1,7 +1,9 @@
 section .data
 	true db "Numbers equal",10
-	false db "Numbers not equal"
+	false db "Numbers not equal: "
 	wrongArgc db "Did not pass two args",10
+	space db " "
+	new_line db 10
 
 section .bss
 	input1: resb 2
@@ -18,11 +20,14 @@ _start:
 	pop rax
 	
 	pop rax
-	mov rcx, [rax]
+	mov cl, [rax]
 	pop rax
-	mov rbx, [rax]
+	mov bl, [rax]
 
-	cmp rcx, rbx
+	mov [input1], cl
+	mov [input2], bl
+
+	cmp cl, bl
 	je equals
 	jne nequals
 	
@@ -37,26 +42,29 @@ equals:
 	jmp exit
 	
 nequals:
-	push rbx
-	push rcx
-	
 	mov rax, 1
 	mov rdi, 1
 	mov rsi, false
-	mov rdx, 17
+	mov rdx, 19
 	syscall
 	
-	pop rsi
-	add rsi, 48
+	mov rax, 1	; this gets overriden by syscall
+	mov rsi, input1
+	mov rdx, 1
+	syscall
+
+	mov rax, 1
+	mov rsi, space
 	mov rdx, 1
 	syscall
 	
-	pop rsi
-	add rsi, 48
+	mov rax, 1
+	mov rsi, input2
 	mov rdx, 1
 	syscall
 	
-	mov rsi, 10
+	mov rax, 1
+	mov rsi, new_line
 	mov rdx, 1
 	syscall
 
