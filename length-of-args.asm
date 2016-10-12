@@ -8,18 +8,20 @@ _start:
 	pop rcx
 	sub rcx, 1
 	
+	; this currently just expects one arg
 	mov rax, [rsp+8h]
 	;mov rax, [rsp+10h]
 	mov rdx, 0
 _l2:
-	add rax, rdx
+	; just reading ascii for now
+	inc rax
 	inc rdx
 
 	mov bl, [rax]
 	cmp bl, 0
 	jne _l2
 
-	add rdx, 47
+	add rdx, 48
 	mov [len], rdx
 
 	mov rax, 1
